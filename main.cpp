@@ -1,32 +1,38 @@
-#include<iostream>
+#include <iostream>
+#include <algorithm>
+#include <vector>
 using namespace std;
-
-void sortowanie_babelkowe(int tab[],int n)
-{
-	for(int i=0;i<n;i++)
-		for(int j=1;j<n-i;j++) //pêtla wewnêtrzna
-		if(tab[j-1]>tab[j])
-			//zamiana miejscami
-			swap(tab[j-1], tab[j]);
-}
 
 int main()
 {
-	int *tab, n;
+	int liczba, n;
 
-	cout<<"Ile liczb bêdziesz chcia³ posortowaæ? ";
+	//cout<<"Ile liczb bêdziesz chcia³ posortowaæ? ";
 	cin>>n;
 
-	tab = new int [n]; //przydzielenie pamiêci na elementy tablicy
-	//wczytanie liczb
+	int p = 2000000000/n;  //zakres jednego kube³ka
+	//przedzia³y dla kolejnych kube³kow:
+	//[0, p), [p, 2p), [2p, 3p), ..., [(n-1)p, n*p)
+
+	vector  kubelki[n]; //tworzymy kube³ki
+
+	//wczytanie liczb i wrzucenie ich do odpowiednich kube³ków
 	for(int i=0;i<n;i++)
-		cin>>tab[i];
-
-	sortowanie_babelkowe(tab,n);
-
-	//wypisanie posortowanych elementów
+	{
+		cin>>liczba;
+		//wrzucam liczbê do odpowiedniego kube³ka
+		kubelki[liczba/p].push_back(liczba);
+	}
+	//sortowanie elementów w poszczególnych kube³kach
 	for(int i=0;i<n;i++)
-          cout<<tab[i]<<" ";
+	//sortujemy tylko, jesli kube³ek ma co najmniej dwie liczby
+	if(kubelki[i].size()>1)
+		sort(kubelki[i].begin(), kubelki[i].end());
 
-  return 0;
+	//wypisanie posortowanych liczb
+	for(int i=0;i<n;i++)
+		for(int j=0;j<kubelki[i].size();j++)
+			cout<<kubelki[i][j]<<' ';
+
+	return 0;
 }
