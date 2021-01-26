@@ -1,38 +1,50 @@
-#include <iostream>
-#include <algorithm>
-#include <vector>
+#include<iostream>
 using namespace std;
+
+void sortowanie_przez_wstawianie(int n, int *tab)
+{
+     int pom, j;
+     for(int i=1; i<n; i++)
+     {
+             //wstawienie elementu w odpowiednie miejsce
+             pom = tab[i]; //ten element bêdzie wstawiony w odpowiednie miejsce
+             j = i-1;
+
+             //przesuwanie elementów wiêkszych od pom
+             while(j>=0 && tab[j]>pom)
+             {
+                        tab[j+1] = tab[j]; //przesuwanie elementów
+                        --j;
+             }
+             tab[j+1] = pom; //wstawienie pom w odpowiednie miejsce
+     }
+}
 
 int main()
 {
-	int liczba, n;
+    int n, *tab;
+    cout<<"Podaj wielkoœæ zbioru: ";
+    cin>>n;
 
-	//cout<<"Ile liczb bêdziesz chcia³ posortowaæ? ";
-	cin>>n;
+    tab = new int [n];
 
-	int p = 2000000000/n;  //zakres jednego kube³ka
-	//przedzia³y dla kolejnych kube³kow:
-	//[0, p), [p, 2p), [2p, 3p), ..., [(n-1)p, n*p)
+    for(int i=0; i<n; i++)
+    {
+            cout<<"Podaj "<<i+1<<" element: ";
+            cin>>tab[i];
+    }
 
-	vector  kubelki[n]; //tworzymy kube³ki
+    cout<<"Elementy przed sortowaniem:\n";
+    for(int i=0; i<n; i++)
+            cout<<tab[i]<<" ";
 
-	//wczytanie liczb i wrzucenie ich do odpowiednich kube³ków
-	for(int i=0;i<n;i++)
-	{
-		cin>>liczba;
-		//wrzucam liczbê do odpowiedniego kube³ka
-		kubelki[liczba/p].push_back(liczba);
-	}
-	//sortowanie elementów w poszczególnych kube³kach
-	for(int i=0;i<n;i++)
-	//sortujemy tylko, jesli kube³ek ma co najmniej dwie liczby
-	if(kubelki[i].size()>1)
-		sort(kubelki[i].begin(), kubelki[i].end());
+    sortowanie_przez_wstawianie(n, tab);
 
-	//wypisanie posortowanych liczb
-	for(int i=0;i<n;i++)
-		for(int j=0;j<kubelki[i].size();j++)
-			cout<<kubelki[i][j]<<' ';
+    cout<<"\nElementy posortowaniem:\n";
+    for(int i=0; i<n; i++)
+            cout<<tab[i]<<" ";
 
-	return 0;
+    cin.ignore();
+    cin.get();
+    return 0;
 }
