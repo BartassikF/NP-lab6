@@ -1,50 +1,67 @@
-#include<iostream>
+#include <cmath>
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+
 using namespace std;
 
-void sortowanie_przez_wstawianie(int n, int *tab)
-{
-     int pom, j;
-     for(int i=1; i<n; i++)
-     {
-             //wstawienie elementu w odpowiednie miejsce
-             pom = tab[i]; //ten element bêdzie wstawiony w odpowiednie miejsce
-             j = i-1;
+const int N = 6; // Liczebnoœæ zbioru. Nie wstawiaj liczb
+                 // wiêkszych od 9, bo mo¿esz siê nie
+                 // doczekaæ rozwi¹zania
+int d[N];
 
-             //przesuwanie elementów wiêkszych od pom
-             while(j>=0 && tab[j]>pom)
-             {
-                        tab[j+1] = tab[j]; //przesuwanie elementów
-                        --j;
-             }
-             tab[j+1] = pom; //wstawienie pom w odpowiednie miejsce
-     }
+// Funkcja sprawdzaj¹ca uporz¹dkowanie w zbiorze
+//-----------------------------------------------------
+bool Posortowane()
+{
+  int i;
+
+  for(i = 0; i < N - 1; i++) if(d[i] > d[i+1]) return false;
+  return true;
 }
+
+// Procedura tasuj¹ca zbiór
+//-------------------------
+void Tasuj()
+{
+  int i,i1,i2;
+
+  for(i = 1; i <= 3 * N; i++)
+  {
+    i1 = rand() % N; i2 = rand() % N;
+    swap(d[i1], d[i2]);
+  }
+}
+
+//******************************************************
 
 int main()
 {
-    int n, *tab;
-    cout<<"Podaj wielkoœæ zbioru: ";
-    cin>>n;
+  int i;
 
-    tab = new int [n];
+  cout << "Sortowanie  zwariowane\n"
+          "----------------------\n"
+          "(C)2005 Jerzy Walaszek\n\n";
 
-    for(int i=0; i<n; i++)
-    {
-            cout<<"Podaj "<<i+1<<" element: ";
-            cin>>tab[i];
-    }
+// Najpierw wype³niamy tablicê d[] liczbami pseudolosowymi
+// a nastêpnie wyœwietlamy jej zawartoœæ
 
-    cout<<"Elementy przed sortowaniem:\n";
-    for(int i=0; i<n; i++)
-            cout<<tab[i]<<" ";
+  srand((unsigned)time(NULL));
 
-    sortowanie_przez_wstawianie(n, tab);
+  for(i = 0; i < N; i++) d[i] = rand() % 10000;
+  cout << "Przed sortowaniem:\n\n";
+  for(i = 0; i < N; i++) cout << setw(6) << d[i];
+  cout << endl << endl;
 
-    cout<<"\nElementy posortowaniem:\n";
-    for(int i=0; i<n; i++)
-            cout<<tab[i]<<" ";
+// Sortujemy
 
-    cin.ignore();
-    cin.get();
-    return 0;
+  while(!Posortowane()) Tasuj();
+
+// Wyœwietlamy wynik sortowania
+
+  cout << "Po sortowaniu:\n\n";
+  for(i = 0; i < N; i++) cout << setw(6) << d[i];
+  cout << endl << endl;
+  return 0;
 }
