@@ -1,67 +1,56 @@
-#include <cmath>
-#include <iostream>
-#include <iomanip>
-#include <cstdlib>
-#include <ctime>
-
+#include<iostream>
 using namespace std;
 
-const int N = 6; // Liczebnoœæ zbioru. Nie wstawiaj liczb
-                 // wiêkszych od 9, bo mo¿esz siê nie
-                 // doczekaæ rozwi¹zania
-int d[N];
 
-// Funkcja sprawdzaj¹ca uporz¹dkowanie w zbiorze
-//-----------------------------------------------------
-bool Posortowane()
+void quick_sort(int *tab, int lewy, int prawy)
 {
-  int i;
+	if(prawy <= lewy) return;
 
-  for(i = 0; i < N - 1; i++) if(d[i] > d[i+1]) return false;
-  return true;
+	int i = lewy - 1, j = prawy + 1,
+	pivot = tab[(lewy+prawy)/2]; //wybieramy punkt odniesienia
+
+	while(1)
+	{
+		//szukam elementu wiekszego lub rownego piwot stojacego
+		//po prawej stronie wartosci pivot
+		while(pivot>tab[++i]);
+
+		//szukam elementu mniejszego lub rownego pivot stojacego
+		//po lewej stronie wartosci pivot
+		while(pivot<tab[--j]);
+
+		//jesli liczniki sie nie minely to zamieñ elementy ze soba
+		//stojace po niewlasciwej stronie elementu pivot
+		if( i <= j)
+			//funkcja swap zamienia wartosciami tab[i] z tab[j]
+			swap(tab[i],tab[j]);
+		else
+			break;
+	}
+
+	if(j > lewy)
+	quick_sort(tab, lewy, j);
+	if(i < prawy)
+	quick_sort(tab, i, prawy);
 }
-
-// Procedura tasuj¹ca zbiór
-//-------------------------
-void Tasuj()
-{
-  int i,i1,i2;
-
-  for(i = 1; i <= 3 * N; i++)
-  {
-    i1 = rand() % N; i2 = rand() % N;
-    swap(d[i1], d[i2]);
-  }
-}
-
-//******************************************************
-
 int main()
 {
-  int i;
+	int *tab, n;
 
-  cout << "Sortowanie  zwariowane\n"
-          "----------------------\n"
-          "(C)2005 Jerzy Walaszek\n\n";
+  	//cout<<"Ile liczb bêdziesz chcia³ posortowaæ? ";
+  	cin>>n;
+  	tab = new int [n]; //przydzielenie pamiêci na elementy tablicy
+  	//wczytanie liczb
+  	for(int i=0;i<n;i++)
+    	cin>>tab[i];
 
-// Najpierw wype³niamy tablicê d[] liczbami pseudolosowymi
-// a nastêpnie wyœwietlamy jej zawartoœæ
+  	quick_sort(tab,0, n-1);
 
-  srand((unsigned)time(NULL));
+  	//wypisanie posortowanych elementów
+  	for(int i=0;i<n;i++)
+          cout<<tab[i]<<" ";
 
-  for(i = 0; i < N; i++) d[i] = rand() % 10000;
-  cout << "Przed sortowaniem:\n\n";
-  for(i = 0; i < N; i++) cout << setw(6) << d[i];
-  cout << endl << endl;
-
-// Sortujemy
-
-  while(!Posortowane()) Tasuj();
-
-// Wyœwietlamy wynik sortowania
-
-  cout << "Po sortowaniu:\n\n";
-  for(i = 0; i < N; i++) cout << setw(6) << d[i];
-  cout << endl << endl;
-  return 0;
+  	cin.ignore();
+  	cin.get();
+  	return 0;
 }
